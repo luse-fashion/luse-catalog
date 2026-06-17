@@ -99,12 +99,11 @@ textarea{resize:vertical;min-height:80px;line-height:1.7}
 .cancel-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px 20px;border-radius:4px;cursor:pointer;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;transition:all .2s}
 .cancel-btn:hover{color:var(--white);border-color:var(--muted)}
 .modal-img-row{display:grid;grid-template-columns:100px 1fr;gap:16px;align-items:start;margin-bottom:14px}
-.piu-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
-.piu{width:100px;height:128px;background:#111;border:1px dashed var(--border);border-radius:6px;overflow:hidden;position:relative;display:grid;place-items:center;font-size:28px;color:var(--muted)}
+.piu{width:100px;height:128px;background:#111;border:1px dashed var(--border);border-radius:6px;overflow:hidden;position:relative;cursor:pointer;display:grid;place-items:center;font-size:28px;color:var(--muted)}
+.piu:hover{border-color:var(--accent)}
+.piu input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .piu img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
 .piu img.show{display:block}
-.piu-btn{background:transparent;border:1px solid var(--border);color:var(--accent);padding:5px 10px;border-radius:4px;cursor:pointer;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;transition:all .2s;width:100px}
-.piu-btn:hover{border-color:var(--accent);background:rgba(200,184,154,.08)}
 .badge-row{display:flex;gap:8px;flex-wrap:wrap}
 .badge-opt{padding:6px 13px;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);transition:all .2s}
 .badge-opt.sel{border-color:var(--accent);color:var(--accent);background:rgba(200,184,154,.1)}
@@ -120,7 +119,6 @@ textarea{resize:vertical;min-height:80px;line-height:1.7}
   .prod-row{grid-template-columns:56px 1fr;grid-template-rows:auto auto}
   .prod-btns{grid-column:1/-1}
   .modal-img-row{grid-template-columns:1fr}
-  .piu-wrap{align-self:center}
 }
 </style>
 </head>
@@ -285,13 +283,10 @@ textarea{resize:vertical;min-height:80px;line-height:1.7}
   <div class="modal">
     <div class="modal-head" id="modal-head">Tambah Produk</div>
     <div class="modal-img-row">
-      <div class="piu-wrap">
-        <div class="piu" id="piu">
-          <input type="file" accept="image/*" onchange="piuUpload(this)" id="piu-input">
-          <img id="piu-img" alt="">
-          <span id="piu-icon">📸</span>
-        </div>
-        <button class="piu-btn" type="button" onclick="document.getElementById('piu-input').click()">Ganti Foto</button>
+      <div class="piu" id="piu">
+        <input type="file" accept="image/*" onchange="piuUpload(this)">
+        <img id="piu-img" alt="">
+        <span id="piu-icon">📸</span>
       </div>
       <div>
         <div class="fg"><label>Nama Produk</label><input type="text" id="p-name" placeholder="Oversized Phantom Tee"></div>
@@ -452,18 +447,6 @@ function renderProds(){
     </div>`).join('');
 }
 
-function resetFileInput(){
-  // Recreate input file biar bisa upload ulang di semua browser
-  const piu = document.getElementById('piu');
-  const oldInput = document.getElementById('piu-input');
-  const newInput = document.createElement('input');
-  newInput.type = 'file';
-  newInput.accept = 'image/*';
-  newInput.id = 'piu-input';
-  newInput.style.cssText = 'position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%';
-  newInput.onchange = function(){ piuUpload(this) };
-  piu.replaceChild(newInput, oldInput);
-}
 function openModal(id=null){
   editId=id; curBadge='available'; curImg=null;
   document.getElementById('modal-head').textContent = id ? 'Edit Produk' : 'Tambah Produk Baru';
@@ -472,16 +455,15 @@ function openModal(id=null){
   document.getElementById('piu-icon').style.display='';
   document.querySelectorAll('.badge-opt').forEach(b=>b.classList.remove('sel'));
   document.querySelector('.badge-opt').classList.add('sel');
-  resetFileInput();
   if(id){
     const p=g('products').find(x=>x.id===id); if(!p) return;
-    document.getElementById('p-name').value  = p.name        || '';
-    document.getElementById('p-col').value   = p.collection  || '';
-    document.getElementById('p-det').value   = p.detail      || '';
-    document.getElementById('p-price').value = p.price       || '';
-    document.getElementById('p-stock').value = p.stock       || '';
-    curBadge=p.badge||'available'; curImg=p.img||null;
-    document.querySelectorAll('.badge-opt').forEach(b=>{ b.classList.toggle('sel', b.dataset.val===curBadge) });
+    document.getElementById('p-name').value  = p.name;
+    document.getElementById('p-col').value   = p.collection;
+    document.getElementById('p-det').value   = p.detail;
+    document.getElementById('p-price').value = p.price;
+    document.getElementById('p-stock').value = p.stock;
+    curBadge=p.badge; curImg=p.img||null;
+    document.querySelectorAll('.badge-opt').forEach(b=>{ b.classList.toggle('sel', b.dataset.val===p.badge) });
     if(p.img){ piuImg.src=p.img; piuImg.classList.add('show'); document.getElementById('piu-icon').style.display='none' }
   }
   document.getElementById('modal').classList.add('open');
@@ -499,6 +481,7 @@ function piuUpload(inp){
     document.getElementById('piu-icon').style.display='none';
   };
   r.readAsDataURL(f);
+  inp.value=''; // reset input agar bisa pilih file yang sama lagi
 }
 function saveProd(){
   const name=document.getElementById('p-name').value.trim();
