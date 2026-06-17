@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title id="site-title">LUSE — Limited. Unique. Scarce. Exclusive.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#0a0a0a;--white:#f5f2ee;--accent:#c8b89a;--muted:#3a3530;--glitch:#ff2a2a;
+  /* White mode (default) */
+  --bg:#f5f2ee;--fg:#0a0a0a;--fg-muted:rgba(10,10,10,.5);--fg-faint:rgba(10,10,10,.25);
+  --card-bg:#ebe8e4;--border:rgba(10,10,10,.1);--border-faint:rgba(10,10,10,.06);
+  --about-visual-bg:linear-gradient(135deg,#ddd9d4 0%,#c8c3bc 50%,#ddd9d4 100%);
+  --about-logo-color:rgba(10,10,10,.06);--about-tag-border:rgba(10,10,10,.12);
+  --ticker-color:#0a0a0a;--manifesto-strong:#0a0a0a;
+  --hero-grid:rgba(10,10,10,.04);
+  --product-placeholder:rgba(10,10,10,.04);
+  --footer-border:rgba(10,10,10,.1);--footer-note:rgba(10,10,10,.35);
+  --section-note:rgba(10,10,10,.3);--nav-logo-filter:none;--hero-logo-filter:none;--footer-logo-filter:invert(1);
+}
+body.dark-mode{
+  --bg:#0a0a0a;--fg:#f5f2ee;--fg-muted:rgba(245,242,238,.5);--fg-faint:rgba(245,242,238,.25);
+  --card-bg:#1a1815;--border:rgba(245,242,238,.1);--border-faint:rgba(245,242,238,.06);
+  --about-visual-bg:linear-gradient(135deg,#1a1510 0%,#2d2820 50%,#1a1510 100%);
+  --about-logo-color:rgba(245,242,238,.06);--about-tag-border:rgba(245,242,238,.1);
+  --ticker-color:#0a0a0a;--manifesto-strong:#f5f2ee;
+  --hero-grid:rgba(245,242,238,.03);
+  --product-placeholder:rgba(245,242,238,.04);
+  --footer-border:rgba(245,242,238,.08);--footer-note:rgba(245,242,238,.2);
+  --section-note:rgba(245,242,238,.3);--nav-logo-filter:invert(1);--hero-logo-filter:invert(1);--footer-logo-filter:none;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:'DM Sans',sans-serif;overflow-x:hidden;transition:background .4s ease,color .4s ease}
+/* Theme toggle button */
+.theme-toggle{display:flex;align-items:center;gap:8px;background:transparent;color:var(--fg);border:1px solid var(--border);cursor:pointer;padding:8px 16px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;transition:all .3s;opacity:.7;white-space:nowrap}
+.theme-toggle:hover{opacity:1;border-color:var(--fg)}
+.theme-toggle-icon{font-size:12px;line-height:1}
+/* Theme-aware cursor */
+body { cursor: auto; }
+body.dark-mode { cursor: auto; }
+a, button, .product-card, .theme-toggle, [onclick] { cursor: pointer; }
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:28px 48px;background:transparent;transition:background .3s ease,backdrop-filter .3s ease}
+nav.scrolled{background:rgba(245,242,238,.88);backdrop-filter:blur(12px)}
+body.dark-mode nav.scrolled{background:rgba(10,10,10,.88)}
+.nav-logo{text-decoration:none;display:flex;align-items:center}
+.nav-logo img{height:52px;width:auto;filter:var(--nav-logo-filter);transition:filter .4s ease}
+.nav-logo span{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.3em;color:var(--fg);transition:color .4s ease}
+.nav-right{display:flex;align-items:center;gap:32px}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{color:var(--fg);text-decoration:none;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;transition:opacity .3s,color .4s ease}
+.nav-links a:hover{opacity:1}
+/* Hamburger */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:110}
+.nav-hamburger span{display:block;width:24px;height:2px;background:var(--fg);transition:all .3s ease}
+.nav-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.nav-hamburger.open span:nth-child(2){opacity:0}
+.nav-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+/* Mobile nav overlay */
+.mobile-menu{display:none;position:fixed;inset:0;background:var(--bg);z-index:105;flex-direction:column;justify-content:center;align-items:center;gap:40px;opacity:0;transition:opacity .3s ease}
+.mobile-menu.open{opacity:1}
+.mobile-menu .nav-links{flex-direction:column;align-items:center;gap:32px}
+.mobile-menu .nav-links a{font-size:13px;letter-spacing:.3em;opacity:.7}
+.mobile-menu .nav-links a:hover{opacity:1}
+.mobile-menu .theme-toggle{margin-top:16px}
+.hero{min-height:100vh;display:grid;place-items:center;position:relative;overflow:hidden;padding:120px 48px 80px}
+.hero-bg{position:absolute;inset:0;background:var(--bg)}
+.hero-bg::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.15;pointer-events:none}
+.hero-grid-line{position:absolute;inset:0;background-image:linear-gradient(var(--hero-grid) 1px,transparent 1px),linear-gradient(90deg,var(--hero-grid) 1px,transparent 1px);background-size:80px 80px}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:900px}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--accent);margin-bottom:32px;display:block;opacity:0;animation:fadeUp .8s ease .3s forwards}
+.hero-title{position:relative;opacity:0;animation:fadeUp .8s ease .5s forwards;display:flex;justify-content:center;align-items:center}
+.hero-logo-img{width:clamp(340px,72vw,820px);height:auto;display:block;color:var(--fg);transition:color .4s ease;overflow:visible}
+.hero-sub{font-family:'DM Sans',sans-serif;font-size:clamp(13px,1.5vw,16px);font-weight:300;color:var(--accent);letter-spacing:.15em;margin-top:20px;text-transform:uppercase;opacity:0;animation:fadeUp .8s ease .7s forwards}
+.hero-desc{font-size:16px;font-weight:300;color:var(--fg-muted);margin-top:32px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.8;opacity:0;animation:fadeUp .8s ease .9s forwards}
+.hero-cta{margin-top:56px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .8s ease 1.1s forwards}
+.btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;padding:16px 36px;border:1px solid;transition:all .3s;display:inline-block}
+.btn-primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}.btn-primary:hover{background:transparent;color:var(--fg)}
+.btn-outline{background:transparent;color:var(--fg);border-color:var(--border)}.btn-outline:hover{border-color:var(--fg)}
+.ticker{background:var(--accent);color:var(--black);padding:14px 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-flex;animation:ticker 20s linear infinite}
+.ticker-item{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.3em;padding:0 40px}
+.ticker-dot{opacity:.4}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.about{padding:140px 48px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
+.about-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,6vw,80px);line-height:.95;letter-spacing:.02em;color:var(--fg);margin-bottom:32px}
+.about-text{font-size:15px;font-weight:300;line-height:2;color:var(--fg-muted);margin-bottom:20px}
+.about-visual{position:relative;aspect-ratio:4/5;background:var(--card-bg);overflow:hidden}
+.about-visual-inner{position:absolute;inset:0;background:var(--about-visual-bg);display:grid;place-items:center}
+.about-logo-big{font-family:'Bebas Neue',sans-serif;font-size:120px;color:var(--about-logo-color);letter-spacing:.1em;user-select:none}
+.about-tag{position:absolute;bottom:32px;left:32px;right:32px;border-top:1px solid var(--about-tag-border);padding-top:20px;display:flex;justify-content:space-between}
+.about-tag span{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-top:48px}
+.pillar{background:var(--bg);padding:32px 28px}
+.pillar-letter{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--accent);line-height:1;margin-bottom:8px}
+.pillar-word{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--fg);margin-bottom:10px}
+.pillar-desc{font-size:12px;color:var(--fg-faint);line-height:1.7}
+.collection{padding:80px 48px 140px}
+.section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;max-width:1200px;margin-left:auto;margin-right:auto}
+.section-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,72px);line-height:.95;color:var(--fg)}
+.section-note{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--section-note);text-align:right;max-width:200px}
+.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1200px;margin:0 auto}
+.product-card{position:relative;cursor:pointer}
+.product-img{aspect-ratio:3/4;background:var(--card-bg);overflow:hidden;position:relative;margin-bottom:20px}
+.product-img-inner{position:absolute;inset:0;transition:transform .6s ease;display:grid;place-items:center}
+.product-card:hover .product-img-inner{transform:scale(1.04)}
+.product-img-inner img{width:100%;height:100%;object-fit:cover}
+.pc-bg{background:var(--card-bg)}
+.product-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.product-placeholder-num{font-family:'Bebas Neue',sans-serif;font-size:80px;color:var(--product-placeholder);line-height:1}
+.product-badge{position:absolute;top:16px;left:16px;background:var(--accent);color:var(--black);font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:5px 10px}
+.product-badge.sold{background:rgba(255,42,42,.15);color:#ff5555;border:1px solid rgba(255,42,42,.3)}
+.product-badge.coming{background:rgba(200,184,154,.15);color:var(--accent);border:1px solid rgba(200,184,154,.3)}
+.product-info{padding:0 4px}
+.product-collection{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.product-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.05em;color:var(--fg);margin-bottom:4px}
+.product-detail{font-size:12px;color:var(--fg-faint);font-style:italic;margin-bottom:12px}
+.product-bottom{display:flex;justify-content:space-between;align-items:center}
+.product-price{font-family:'Space Mono',monospace;font-size:13px;color:var(--fg)}
+.product-stock{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--fg-faint);text-transform:uppercase}
+.product-order-btn{position:absolute;bottom:0;left:0;right:0;background:var(--fg);color:var(--bg);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:14px;text-decoration:none;opacity:0;transform:translateY(8px);transition:all .3s ease}
+.product-img:hover .product-order-btn{opacity:1;transform:translateY(0)}
+.philosophy{background:var(--fg);color:var(--bg);padding:140px 48px;text-align:center;position:relative;overflow:hidden}
+.philosophy::before{content:'LUSE';position:absolute;font-family:'Bebas Neue',sans-serif;font-size:400px;color:rgba(128,128,128,.05);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;line-height:1}
+.philosophy-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:rgba(128,128,128,.5);margin-bottom:32px}
+.philosophy-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,64px);line-height:1.1;letter-spacing:.02em;max-width:780px;margin:0 auto 48px;color:var(--bg);position:relative}
+.philosophy-sub{font-size:15px;font-weight:300;color:rgba(128,128,128,.6);max-width:480px;margin:0 auto;line-height:2}
+.order{padding:140px 48px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
+.order-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,7vw,90px);line-height:.9;color:var(--fg);margin-bottom:24px}
+.order-text{font-size:15px;font-weight:300;color:var(--fg-muted);line-height:2;margin-bottom:48px}
+.order-channels{display:flex;flex-direction:column;gap:16px}
+.order-channel{display:flex;align-items:center;gap:20px;padding:24px 28px;border:1px solid var(--border);text-decoration:none;color:var(--fg);transition:all .3s;position:relative;overflow:hidden}
+.order-channel::before{content:'';position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .4s ease;z-index:0}
+.order-channel:hover::before{transform:scaleX(1)}
+.order-channel:hover .oc-icon,.order-channel:hover .oc-label,.order-channel:hover .oc-handle{color:var(--black)}
+.oc-icon{font-size:24px;position:relative;z-index:1;transition:color .3s}
+.oc-info{position:relative;z-index:1;flex:1}
+.oc-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);transition:color .3s;display:block;margin-bottom:3px}
+.oc-handle{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.05em;transition:color .3s}
+.oc-arrow{position:relative;z-index:1;opacity:.3;font-size:18px;transition:opacity .3s,transform .3s}
+.order-channel:hover .oc-arrow{opacity:1;transform:translateX(4px)}
+.order-manifesto{border:1px solid var(--border);padding:48px}
+.manifesto-item{padding:24px 0;border-bottom:1px solid var(--border-faint);display:flex;gap:24px;align-items:flex-start}
+.manifesto-item:last-child{border-bottom:none}
+.manifesto-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);opacity:.6;flex-shrink:0;margin-top:4px}
+.manifesto-text{font-size:14px;font-weight:300;color:var(--fg-muted);line-height:1.8}
+.manifesto-text strong{color:var(--fg);font-weight:500}
+footer{border-top:1px solid var(--footer-border);padding:48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.footer-logo{display:flex;align-items:center;gap:12px}
+.footer-logo img{height:24px;filter:var(--footer-logo-filter)}
+.footer-logo span{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.3em;color:var(--fg)}
+.footer-tagline{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--fg-faint);text-transform:uppercase}
+.footer-right{text-align:right}
+.footer-note{font-size:11px;color:var(--footer-note)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:none}
+/* ——— TABLET (768px–1024px) ——— */
+@media(max-width:1024px){
+  nav{padding:16px 32px}
+  .nav-links{gap:24px}
+  .hero{padding:110px 32px 80px}
+  .about{padding:100px 32px;gap:48px}
+  .product-grid{grid-template-columns:repeat(2,1fr);gap:20px}
+  .collection{padding:60px 32px 100px}
+  .section-header{margin-bottom:48px}
+  .order{padding:100px 32px;gap:60px}
+  .philosophy{padding:100px 32px}
+  footer{padding:40px 32px}
+}
+/* ——— MOBILE (≤768px) ——— */
+@media(max-width:768px){
+  nav{padding:14px 20px}
+  .nav-logo img{height:42px}
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
+  .mobile-menu{display:flex}
+  .nav-right .theme-toggle{display:none}
+  .hero{padding:90px 20px 60px}
+  .hero-cta{gap:12px}
+  .btn{padding:14px 24px;font-size:10px}
+  .about{grid-template-columns:1fr;padding:72px 20px;gap:40px}.about-visual{display:none}
+  .product-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .collection{padding:40px 20px 72px}
+  .section-header{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:40px}
+  .section-note{max-width:100%;text-align:left}
+  .order{grid-template-columns:1fr;padding:72px 20px;gap:48px}
+  .order-manifesto{padding:32px 24px}
+  .philosophy{padding:72px 20px}
+  footer{padding:28px 20px;flex-direction:column;text-align:center}.footer-right{text-align:center}
+  .ticker-item{font-size:12px;padding:0 24px}
+}
+/* ——— SMALL MOBILE (≤480px) ——— */
+@media(max-width:480px){
+  .product-grid{grid-template-columns:1fr}
+  .hero-logo-img{width:clamp(260px,85vw,400px)}
+  nav{padding:16px 16px}
+  .about{padding:60px 16px}
+  .collection{padding:32px 16px 60px}
+  .order{padding:60px 16px;gap:40px}
+  .philosophy{padding:60px 16px}
+  footer{padding:24px 16px}
+  .pillars{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<nav>
+  <a href="#" class="nav-logo" id="nav-logo-link">
+    <img id="nav-logo-img" src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAYbBhsDASIAAhEBAxEB/8QAGgABAAMBAQEAAAAAAAAAAAAAAAECAwQFCP/EAEoQAQACAgADAgoGBgkCBAcBAAABAgMRBBIhMdETFEFRVGFxgZGTIlJTkqGxBRUywdLhIzNCQ2JyguLwRIM0RZSiVWNzo7LC0yX/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A+MgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/9k=" alt="LUSE" style="display:block;height:52px;width:auto;max-width:200px;object-fit:contain;filter:var(--nav-logo-filter);transition:filter .4s ease">
+    <span id="nav-logo-text" style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.3em;color:var(--fg);transition:color .4s ease;display:none">LUSE</span>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#collection">Koleksi</a></li>
+      <li><a href="#about">Brand</a></li>
+      <li><a href="#order">Order</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+      <span class="theme-toggle-icon" id="themeIcon">◐</span>
+      <span id="themeLabel">Dark Mode</span>
+    </button>
+    <button class="nav-hamburger" id="navHamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul class="nav-links">
+    <li><a href="#collection" onclick="closeMobileMenu()">Koleksi</a></li>
+    <li><a href="#about" onclick="closeMobileMenu()">Brand</a></li>
+    <li><a href="#order" onclick="closeMobileMenu()">Order</a></li>
+  </ul>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span class="theme-toggle-icon" id="themeIconMobile">◐</span>
+    <span id="themeLabelMobile">Dark Mode</span>
+  </button>
+</div>
+
+<section class="hero">
+  <div class="hero-bg"><div class="hero-grid-line"></div></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow" id="hero-eyebrow">Indonesian Fashion — Est. 2025</span>
+    <h1 class="hero-title">
+      <svg class="hero-logo-img" id="hero-logo-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 400" aria-label="LUSE">
+      <defs>
+        <clipPath id="s0"><rect x="0" y="80" width="1080" height="8"/></clipPath>
+        <clipPath id="s1"><rect x="0" y="88" width="1080" height="5"/></clipPath>
+        <clipPath id="s2"><rect x="0" y="93" width="1080" height="12"/></clipPath>
+        <clipPath id="s3"><rect x="0" y="105" width="1080" height="6"/></clipPath>
+        <clipPath id="s4"><rect x="0" y="111" width="1080" height="9"/></clipPath>
+        <clipPath id="s5"><rect x="0" y="120" width="1080" height="14"/></clipPath>
+        <clipPath id="s6"><rect x="0" y="134" width="1080" height="7"/></clipPath>
+        <clipPath id="s7"><rect x="0" y="141" width="1080" height="18"/></clipPath>
+        <clipPath id="s8"><rect x="0" y="159" width="1080" height="5"/></clipPath>
+        <clipPath id="s9"><rect x="0" y="164" width="1080" height="22"/></clipPath>
+        <clipPath id="s10"><rect x="0" y="186" width="1080" height="8"/></clipPath>
+        <clipPath id="s11"><rect x="0" y="194" width="1080" height="15"/></clipPath>
+        <clipPath id="s12"><rect x="0" y="209" width="1080" height="6"/></clipPath>
+        <clipPath id="s13"><rect x="0" y="215" width="1080" height="20"/></clipPath>
+        <clipPath id="s14"><rect x="0" y="235" width="1080" height="9"/></clipPath>
+        <clipPath id="s15"><rect x="0" y="244" width="1080" height="13"/></clipPath>
+        <clipPath id="s16"><rect x="0" y="257" width="1080" height="5"/></clipPath>
+        <clipPath id="s17"><rect x="0" y="262" width="1080" height="18"/></clipPath>
+        <clipPath id="s18"><rect x="0" y="280" width="1080" height="7"/></clipPath>
+        <clipPath id="s19"><rect x="0" y="287" width="1080" height="11"/></clipPath>
+        <clipPath id="s20"><rect x="0" y="298" width="1080" height="6"/></clipPath>
+        <clipPath id="s21"><rect x="0" y="304" width="1080" height="16"/></clipPath>
+      </defs>
+      <g clip-path="url(#s0)"><text x="552" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s1)"><text x="572" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s2)"><text x="548" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s3)"><text x="568" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s4)"><text x="542" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s5)"><text x="560" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s6)"><text x="538" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s7)"><text x="555" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s8)"><text x="575" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s9)"><text x="552" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s10)"><text x="565" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s11)"><text x="544" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s12)"><text x="572" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s13)"><text x="548" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s14)"><text x="562" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s15)"><text x="540" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s16)"><text x="570" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s17)"><text x="553" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s18)"><text x="545" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s19)"><text x="567" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s20)"><text x="543" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+      <g clip-path="url(#s21)"><text x="558" y="315" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="260" fill="currentColor" letter-spacing="4">LUSE</text></g>
+    </svg>
+    </h1>
+    <p class="hero-sub" id="hero-sub">Limited · Unique · Scarce · Exclusive</p>
+    <p class="hero-desc" id="hero-desc">Busana yang dirancang bukan untuk semua orang. Setiap piece adalah pernyataan — langka, berharga, dan hanya milikmu.</p>
+    <div class="hero-cta">
+      <a href="#collection" class="btn btn-primary" id="hero-btn1">Lihat Koleksi</a>
+      <a href="#order" class="btn btn-outline" id="hero-btn2">Cara Order</a>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner" id="ticker-inner">
+    <span class="ticker-item">LIMITED EDITION</span><span class="ticker-item ticker-dot">◆</span>
+    <span class="ticker-item">BUKAN UNTUK SEMUA ORANG</span><span class="ticker-item ticker-dot">◆</span>
+    <span class="ticker-item">PRODUKSI TERBATAS</span><span class="ticker-item ticker-dot">◆</span>
+    <span class="ticker-item">WEAR YOUR IDENTITY</span><span class="ticker-item ticker-dot">◆</span>
+    <span class="ticker-item">ANTI PASARAN</span><span class="ticker-item ticker-dot">◆</span>
+    <span class="ticker-item">LIMITED EDITION</span><span class="ticker-item ticker-dot">◆</span>
+    <span class="ticker-item">BUKAN UNTUK SEMUA ORANG</span><span class="ticker-item ticker-dot">◆</span>
+    <span class="ticker-item">PRODUKSI TERBATAS</span><span class="ticker-item ticker-dot">◆</span>
+    <span class="ticker-item">WEAR YOUR IDENTITY</span><span class="ticker-item ticker-dot">◆</span>
+    <span class="ticker-item">ANTI PASARAN</span><span class="ticker-item ticker-dot">◆</span>
+  </div>
+</div>
+
+<section class="about" id="about">
+  <div class="reveal">
+    <p class="about-label">Tentang LUSE</p>
+    <h2 class="about-heading" id="about-heading">Fashion<br>adalah<br>identitas.</h2>
+    <p class="about-text" id="about-p1"></p>
+    <p class="about-text" id="about-p2"></p>
+    <div class="pillars" id="pillars-grid"></div>
+  </div>
+  <div class="about-visual reveal">
+    <div class="about-visual-inner"><div class="about-logo-big" id="about-logo-big">LUSE</div></div>
+    <div class="about-tag">
+      <span id="footer-city">Jakarta, Indonesia</span>
+      <span>Est. <span id="brand-year">2025</span></span>
+    </div>
+  </div>
+</section>
+
+<section class="collection" id="collection">
+  <div class="section-header reveal">
+    <div>
+      <p class="section-label">Drop Terkini</p>
+      <h2 class="section-title">Koleksi<br>Terbaru</h2>
+    </div>
+    <p class="section-note">Setiap item hanya tersedia dalam jumlah sangat terbatas. Hubungi kami untuk ketersediaan.</p>
+  </div>
+  <div class="product-grid" id="product-grid"></div>
+</section>
+
+<section class="philosophy">
+  <p class="philosophy-label">Filosofi LUSE</p>
+  <p class="philosophy-text reveal" id="ph-quote"></p>
+  <p class="philosophy-sub" id="ph-sub"></p>
+</section>
+
+<section class="order" id="order">
+  <div class="reveal">
+    <h2 class="order-heading">Cara<br>Order</h2>
+    <p class="order-text">Tidak ada keranjang belanja, tidak ada checkout online. Setiap pembelian LUSE bersifat personal. Hubungi kami langsung untuk memastikan ketersediaan dan memulai proses order.</p>
+    <div class="order-channels">
+      <a id="ig-link" href="#" target="_blank" class="order-channel">
+        <span class="oc-icon">📸</span>
+        <div class="oc-info">
+          <span class="oc-label">Instagram DM</span>
+          <span class="oc-handle" id="ig-handle">@luse.official</span>
+        </div>
+        <span class="oc-arrow">→</span>
+      </a>
+      <a id="wa-link" href="#" target="_blank" class="order-channel">
+        <span class="oc-icon">💬</span>
+        <div class="oc-info">
+          <span class="oc-label">WhatsApp</span>
+          <span class="oc-handle" id="wa-handle">+62 812-XXXX-XXXX</span>
+        </div>
+        <span class="oc-arrow">→</span>
+      </a>
+    </div>
+  </div>
+  <div class="order-manifesto reveal">
+    <div class="order-manifesto">
+      <div class="manifesto-item"><span class="manifesto-num">01</span><p class="manifesto-text"><strong>Hubungi kami</strong> via Instagram DM atau WhatsApp dengan menyebutkan item yang kamu inginkan dan ukuranmu.</p></div>
+      <div class="manifesto-item"><span class="manifesto-num">02</span><p class="manifesto-text"><strong>Konfirmasi ketersediaan</strong> — kami akan cek stok dan menginformasikan kondisi item secara detail.</p></div>
+      <div class="manifesto-item"><span class="manifesto-num">03</span><p class="manifesto-text"><strong>Payment &amp; pengiriman</strong> via transfer bank atau e-wallet. Pengiriman ke seluruh Indonesia.</p></div>
+      <div class="manifesto-item"><span class="manifesto-num">04</span><p class="manifesto-text"><strong>No restock policy.</strong> Sekali item habis, tidak akan ada produksi ulang. Itu janji kami.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <p class="footer-tagline" id="footer-tagline">Limited · Unique · Scarce · Exclusive</p>
+  </div>
+  <div class="footer-right">
+    <p class="footer-note">© <span id="brand-year2">2025</span> LUSE. All rights reserved.</p>
+    <p class="footer-note" style="margin-top:4px" id="footer-city2">Jakarta, Indonesia</p>
+  </div>
+</footer>
+
+<script>
+// ——— DEFAULT DATA (same as admin) ———
+const DEFAULTS = {
+  brand:{name:"LUSE",year:"2025",tagline:"Limited · Unique · Scarce · Exclusive",city:"Jakarta, Indonesia"},
+  hero:{eyebrow:"Indonesian Fashion — Est. 2025",desc:"Busana yang dirancang bukan untuk semua orang. Setiap piece adalah pernyataan — langka, berharga, dan hanya milikmu.",btn1:"Lihat Koleksi",btn2:"Cara Order"},
+  about:{heading:"Fashion\nadalah\nidentitas.",p1:"LUSE lahir dari rasa bosan terhadap fashion yang massal dan tidak berkarakter. Kami memproduksi dalam jumlah sangat terbatas — bukan karena keterbatasan, melainkan karena pilihan.",p2:"Setiap item LUSE adalah satu-satunya atau salah satu dari sangat sedikit. Ketika kamu mengenakan LUSE, kamu tahu tidak akan bertemu orang lain dengan baju yang sama."},
+  pillars:[
+    {letter:"L",word:"Limited",desc:"Jumlah produksi sangat sedikit. Sekali habis, tidak ada restock."},
+    {letter:"U",word:"Unique",desc:"Desain yang tidak kamu temukan di tempat lain — orisinal dan berani."},
+    {letter:"S",word:"Scarce",desc:"Kelangkaan bukan trik marketing. Ini adalah filosofi brand kami."},
+    {letter:"E",word:"Exclusive",desc:"Hanya untuk mereka yang menghargai kualitas dan ketidakbiasaan."}
+  ],
+  products:[
+    {id:1,name:"Oversized Phantom Tee",collection:"Drop 001 — Shadow Series",detail:"Heavyweight cotton, garment dyed",price:"Rp 385.000",stock:"3 pcs left",badge:"available",img:null},
+    {id:2,name:"Raw Edge Hoodie",collection:"Drop 001 — Shadow Series",detail:"French terry fleece, unfinished hem",price:"Rp 620.000",stock:"2 pcs left",badge:"available",img:null},
+    {id:3,name:"Void Cargo Pants",collection:"Drop 001 — Shadow Series",detail:"Ripstop cotton, wide leg silhouette",price:"Rp 780.000",stock:"Sold out",badge:"sold",img:null},
+    {id:4,name:"Glitch Longsleeve",collection:"Drop 002 — Noise Series",detail:"Slub jersey, distressed print",price:"Rp 440.000",stock:"4 pcs left",badge:"available",img:null},
+    {id:5,name:"Static Bomber",collection:"Drop 002 — Noise Series",detail:"Nylon shell, satin lining",price:"Rp 950.000",stock:"2 pcs left",badge:"available",img:null},
+    {id:6,name:"Unrevealed",collection:"Drop 003 — ???",detail:"Coming soon — stay close",price:"TBA",stock:"Very limited",badge:"coming",img:null}
+  ],
+  contact:{ig:"luse.official",wa:"6281234567890",waDisplay:"+62 812-XXXX-XXXX"},
+  philosophy:{quote:"Kami tidak membuat baju untuk semua orang. Kami membuat baju untuk orang yang menolak terlihat sama.",sub:"Setiap jahitan, setiap drop, setiap piece adalah keputusan sadar. LUSE bukan tentang mengikuti tren — ini tentang menciptakan sesuatu yang bertahan."}
+};
+
+function load(key){ try{ return JSON.parse(localStorage.getItem("luse_"+key))||null }catch{ return null } }
+function get(key){ return load(key)||DEFAULTS[key] }
+
+function el(id){ return document.getElementById(id) }
+function setImg(id, src){ const e=el(id); if(e&&src){ e.src=src } }
+function setText(id, text){ const e=el(id); if(e) e.innerHTML=text }
+
+function init(){
+  const brand=get("brand"), hero=get("hero"), about=get("about");
+  const pillars=get("pillars"), products=get("products");
+  const contact=get("contact"), ph=get("philosophy");
+
+  // Logo
+  if(brand.logo){
+    // Show custom uploaded logo in NAV (overrides embedded default)
+    const navLogoImg = el("nav-logo-img");
+    const navLogoText = el("nav-logo-text");
+    if(navLogoImg && navLogoText){
+      navLogoImg.src = brand.logo;
+      navLogoImg.style.display = "block";
+      navLogoText.style.display = "none";
+    }
+    // Also update hero inline SVG: replace with uploaded logo img overlay
+    const heroTitle = el("hero-logo-img");
+    if(heroTitle){
+      const heroImg = document.createElement("img");
+      heroImg.src = brand.logo;
+      heroImg.alt = brand.name;
+      heroImg.style.cssText = "width:clamp(280px,65vw,700px);height:auto;display:block;max-height:300px;object-fit:contain;filter:var(--hero-logo-filter)";
+      heroTitle.parentNode.replaceChild(heroImg, heroTitle);
+    }
+  }
+  // Update nav text logo with brand name (fallback if no logo)
+  setText("nav-logo-text", brand.name);
+
+  // Brand info
+  setText("about-logo-big", brand.name);
+  setText("footer-tagline", brand.tagline);
+  ["brand-year","brand-year2"].forEach(id=>setText(id, brand.year));
+  ["footer-city","footer-city2"].forEach(id=>setText(id, brand.city));
+  document.title = brand.name + " — " + brand.tagline;
+
+  // Hero
+  setText("hero-eyebrow", hero.eyebrow);
+  setText("hero-sub", brand.tagline);
+  setText("hero-desc", hero.desc);
+  if(el("hero-btn1")) el("hero-btn1").textContent = hero.btn1;
+  if(el("hero-btn2")) el("hero-btn2").textContent = hero.btn2;
+
+  // About
+  setText("about-heading", about.heading.replace(/\n/g,"<br>"));
+  setText("about-p1", about.p1);
+  setText("about-p2", about.p2);
+
+  // Pillars
+  el("pillars-grid").innerHTML = pillars.map(p=>`
+    <div class="pillar">
+      <div class="pillar-letter">${p.letter}</div>
+      <div class="pillar-word">${p.word}</div>
+      <p class="pillar-desc">${p.desc}</p>
+    </div>
+  `).join('');
+
+  // Products
+  el("product-grid").innerHTML = products.map((p,i)=>{
+    const badgeClass = p.badge==="sold" ? "sold" : p.badge==="coming" ? "coming" : "";
+    const badgeText = p.badge==="sold" ? "Sold Out" : p.badge==="coming" ? "Coming Soon" : "Available";
+    const btnText = p.badge==="sold" ? "Join Waitlist →" : p.badge==="coming" ? "Get Notified →" : "Order via DM →";
+    const imgContent = p.img
+      ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">`
+      : `<div class="product-placeholder"><div class="product-placeholder-num">${String(i+1).padStart(2,"0")}</div></div>`;
+    return `
+    <div class="product-card reveal">
+      <div class="product-img">
+        <div class="product-img-inner pc-bg">${imgContent}</div>
+        <div class="product-badge ${badgeClass}">${badgeText}</div>
+        <a href="#order" class="product-order-btn">${btnText}</a>
+      </div>
+      <div class="product-info">
+        <p class="product-collection">${p.collection}</p>
+        <h3 class="product-name">${p.name}</h3>
+        <p class="product-detail">${p.detail}</p>
+        <div class="product-bottom">
+          <span class="product-price">${p.price}</span>
+          <span class="product-stock">${p.stock}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Philosophy
+  setText("ph-quote", `"${ph.quote}"`);
+  setText("ph-sub", ph.sub);
+
+  // Contact
+  el("ig-handle").textContent = "@"+contact.ig;
+  el("ig-link").href = "https://www.instagram.com/"+contact.ig;
+  el("wa-handle").textContent = contact.waDisplay;
+  el("wa-link").href = "https://wa.me/"+contact.wa;
+
+  // Scroll reveal
+  const reveals=document.querySelectorAll(".reveal");
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){
+        setTimeout(()=>e.target.classList.add("visible"),i*80);
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:.1});
+  reveals.forEach(r=>obs.observe(r));
+}
+
+// ——— THEME TOGGLE ———
+function syncThemeIcons(isDark){
+  ['themeIcon','themeIconMobile'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=isDark?'○':'◐'});
+  ['themeLabel','themeLabelMobile'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=isDark?'White Mode':'Dark Mode'});
+}
+function toggleTheme(){
+  const isDark = document.body.classList.toggle('dark-mode');
+  syncThemeIcons(isDark);
+  try{ localStorage.setItem('luse_theme', isDark ? 'dark' : 'light') }catch(e){}
+}
+(function initTheme(){
+  let saved = 'light';
+  try{ saved = localStorage.getItem('luse_theme') || 'light' }catch(e){}
+  if(saved === 'dark'){
+    document.body.classList.add('dark-mode');
+    syncThemeIcons(true);
+  }
+})();
+
+// ——— NAV SCROLL ———
+window.addEventListener('scroll', function(){
+  const nav = document.querySelector('nav');
+  if(window.scrollY > 40) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+});
+
+// Native cursor - no custom cursor needed
+
+init();
+
+// ——— MOBILE MENU ———
+function toggleMobileMenu(){
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('navHamburger');
+  const isOpen = menu.classList.contains('open');
+  if(isOpen){
+    menu.classList.remove('open');
+    btn.classList.remove('open');
+    document.body.style.overflow = '';
+  } else {
+    menu.classList.add('open');
+    btn.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+function closeMobileMenu(){
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('navHamburger');
+  menu.classList.remove('open');
+  btn.classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
+</body>
+</html>
